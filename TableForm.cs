@@ -13,8 +13,8 @@ namespace SeminClientApp
         private static Panel _filtersPanel;
         private static Panel _findPanel;
         public readonly MySqlConnection Connection;
-        public readonly string DefaultQuery;
-        public readonly string[][] QueryParams;
+        private readonly string _defaultQuery;
+        private readonly string[][] _queryParams;
         public readonly string[][] Relations;
         public readonly string TableIdColumn;
         public readonly string TableName;
@@ -23,13 +23,13 @@ namespace SeminClientApp
         public TableForm(MySqlConnection connection, string tableName, string tableIdColumn, string formTitle,
             string[][] queryParams, string[][] relations)
         {
-            DefaultQuery = CreateDefaultQuery(tableName, tableIdColumn, queryParams, relations);
+            _defaultQuery = CreateDefaultQuery(tableName, tableIdColumn, queryParams, relations);
 
             Connection = connection;
             TableName = tableName;
             TableIdColumn = tableIdColumn;
             Relations = relations;
-            QueryParams = queryParams;
+            _queryParams = queryParams;
 
             _filtersPanel = CreateFiltersPanel();
             _findPanel = CreateFindPanel();
@@ -161,7 +161,7 @@ namespace SeminClientApp
 
             height += 30;
 
-            foreach (var param in QueryParams)
+            foreach (var param in _queryParams)
             {
                 var name = param[2];
 
@@ -200,7 +200,7 @@ namespace SeminClientApp
 
         private void UpdateDataGridView(bool force = false)
         {
-            var query = DefaultQuery;
+            var query = _defaultQuery;
 
             if (filterCheckBox.Checked)
                 foreach (var comboBox in _filtersPanel.Controls.OfType<ComboBox>())
